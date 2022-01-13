@@ -3,6 +3,8 @@ module.exports = function (RED) {
 
     function FitbitCredentials(config) {
         RED.nodes.createNode(this, config);
+        // const credentialsForLoad = RED.nodes.getNode(config.fitbit).credentials;
+        // oauth.loadTokens(this.credentials.clientID,this.credentials.clientSecret);
     }
 
     function getProtocol(req) {
@@ -13,6 +15,7 @@ module.exports = function (RED) {
     function getRedirectURL(req) {
         return getProtocol(req) + '://' + req.get('host') + '/fitbit-credentials/auth/callback';
     }
+    // Load Token file from disk
 
     RED.nodes.registerType("fitbit-credentials", FitbitCredentials, {
         credentials: {
@@ -21,6 +24,9 @@ module.exports = function (RED) {
             clientSecret: { type: "password" }
         }
     });
+
+    // const credentialsForLoad = RED.nodes.getNode(config.fitbit).credentials;
+    // oauth.loadTokens(credentialsForLoad.clientID,credentialsForLoad.clientSecret);
 
     RED.httpAdmin.get('/fitbit-credentials/redirectURL', function (req, res) {
         res.send(getRedirectURL(req));
@@ -65,4 +71,6 @@ module.exports = function (RED) {
             res.send(RED._("fitbit.auth-flow.authorized"));
         });
     });
+
+    oauth.loadTokens();
 }

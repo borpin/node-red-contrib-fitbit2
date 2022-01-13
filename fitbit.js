@@ -27,6 +27,7 @@ function parseFitbitData(data) {
 function typedDataFactory(RED, config, node) {
     return function getTypedInput(msg, key) {
         const type = key + 'Type';
+        // node.warn("got here:" + type)
 
         if (!config[type]) return config[key];
 
@@ -41,7 +42,13 @@ function typedDataFactory(RED, config, node) {
                 return node.context().flow.get(config[key]);
             case 'global':
                 return node.context().global.get(config[key]);
-
+            case 'num':
+                return Number(config[key]);
+            case 'jsonata':
+                var expr = RED.util.prepareJSONataExpression(config[key],node);
+                return RED.util.evaluateJSONataExpression(expr,msg);
+            case 'env':
+                return node.context().env.get(config[key]);
             default:
                 break;
         }
@@ -66,7 +73,7 @@ module.exports = function (RED) {
         },
         "get-daily-activity-summary": {
             display: RED._("fitbit.resources.get-daily-activity-summary"),
-            inputs: ["startDate"],
+            inputs: ["date"],
             method: "GET",
             func: UrlFactory.getDailyActivitySummary
         },
@@ -88,18 +95,6 @@ module.exports = function (RED) {
             method: "GET",
             func: UrlFactory.getFoodTimeSeries
         },
-        "log-body-weight": {
-            display: RED._("fitbit.resources.log-body-weight"),
-            inputs: ["date", "weight"],
-            method: "POST",
-            func: UrlFactory.logBodyWeight
-        },
-        "log-body-fat": {
-            display: RED._("fitbit.resources.log-body-fat"),
-            inputs: ["date", "bodyFat"],
-            method: "POST",
-            func: UrlFactory.logBodyFat
-        },
         "get-food-log": {
             display: RED._("fitbit.resources.get-food-log"),
             inputs: ["date"],
@@ -118,29 +113,42 @@ module.exports = function (RED) {
             method: "GET",
             func: UrlFactory.getSleepLogList
         },
+        "log-body-weight": {
+            display: RED._("fitbit.resources.log-body-weight"),
+            inputs: ["date", "weight"],
+            method: "POST",
+            func: UrlFactory.logBodyWeight
+        },
+        "log-body-fat": {
+            display: RED._("fitbit.resources.log-body-fat"),
+            inputs: ["date", "bodyFat"],
+            method: "POST",
+            func: UrlFactory.logBodyFat
+        },
         "log-activity": {
             display: RED._("fitbit.resources.log-activity"),
             inputs: ["date", "startTime", "durationSec", "activityId", "activityName", "manualCalories", "distance", "distanceUnit"],
             method: "POST",
-            func: UrlFactory.logActivty,
-        },
-        "delete-activity": {
-            display: RED._("fitbit.resources.delete-activity"),
-            inputs: ["activityLogId"],
-            method: "DELETE",
-            func: UrlFactory.deleteActivty,
+            func: UrlFactory.logActivity
         },
         "log-food": {
             display: RED._("fitbit.resources.log-food"),
             inputs: ["startDate", "foodId", "mealTypeId", "unitId", "manualCalories"],
             method: "POST",
-            func: UrlFactory.logFood,
+            func: UrlFactory.logFood
         },
+        "delete-activity": {
+            display: RED._("fitbit.resources.delete-activity"),
+            inputs: ["activityLogId"],
+            method: "DELETE",
+            func: UrlFactory.deleteActivity
+        }
     };
 
     function fitbitInNode(config) {
         RED.nodes.createNode(this, config);
         const node = this;
+        
         const getTypedData = typedDataFactory(RED, config, node);
 
         const errorReport = function (errorText, msg) {
@@ -185,17 +193,23 @@ module.exports = function (RED) {
             const credentialsNode = RED.nodes.getNode(config.fitbit);
             const credentials = RED.nodes.getNode(config.fitbit).credentials;
 
-            oauth.makeRequest(resource.method, url, credentials, credentialsNode.id).then(data => {
-                try {
-                    msg.raw = data;
-                    msg.payload = parseFitbitData(data);
-                } catch (err) {
-                    errorReport(err, msg);
-                    return;
-                }
+            try {
+                oauth.makeRequest(resource.method, url, credentials, credentialsNode.id).then(data => {
+                    try {
+                        msg.raw = data;
+                        msg.payload = parseFitbitData(data);
+                    } catch (err) {
+                        errorReport(err, msg);
+                        return;
+                    }
+                    node.status({text: "Status: " + msg.raw.statusCode , fill: "green"});
+                    node.send(msg);
+                })
+            } catch (err) {
+                errorReport(err, msg);
+                return;
+            }
 
-                node.send(msg);
-            })
         });
     }
     RED.nodes.registerType("fitbit", fitbitInNode);
