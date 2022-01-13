@@ -64,11 +64,10 @@ class UrlFactory {
   static getDailyActivitySummary(data) {
     checkData(data);
 
-    if (!data.startDate) {
-      throw "Start date is required.";
+    if (!data.date) {
+      throw "Date is required.";
     }
-    const formattedStartDate = formatDate(data.startDate);
-    return fitbitUrlCurrentUser("activities/date/", formattedStartDate);
+    return fitbitUrlCurrentUser("activities/date/", formatDate(data.date));
   }
 
   static getActivityTimeSeries(data) {
@@ -228,7 +227,7 @@ class UrlFactory {
     return urlObj.href;
   }
 
-  static logActivty(data) {
+  static logActivity(data) {
     checkData(data);
 
     if (data.activityId && data.activityName) {
@@ -272,7 +271,7 @@ class UrlFactory {
     return urlObj.href;
   }
 
-  static deleteActivty(data) {
+  static deleteActivity(data) {
     checkData(data);
 
     if (!data.activityLogId) {

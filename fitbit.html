@@ -267,8 +267,96 @@
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="fitbit">
-    <p>Makes GET request to the <a href="https://dev.fitbit.com/build/reference/web-api/">Fitbit API</a>.</p>
-    <p>Please refer to the API documentation for specific input details, dates should be convertable by <a href="https://momentjs.com/docs/">MomentJS</a>.
-        Some parameters, such as Period, have a limited set of inputs that vary between endpoints</p>
+<script type="text/markdown" data-help-name="fitbit">
+This node makes requests to the Fitbit API https://dev.fitbit.com/build/reference/web-api/. It will both Get data from the API and Log data to Fitbit. It is not a complete set of resources to access the API.
+
+Please refer to the API documentation for specific input details, dates should be convertable by https://momentjs.com/docs/ MomentJS.
+
+Some parameters, such as Period, have a limited set of inputs that vary between endpoints.
+
+### Inputs
+Each API Endpoint has different Input requirements.
+
+### Outputs
+: payload (object) : JSON payload of the data returned from the FitBit API or a success message.
+: inputData (object) : The data passed from the node (useful for debugging).
+: raw (object) : the raw data which includes the returned object, headers, request etc (useful for debugging).
+
+## API Endpoints Exposed
+
+### Get Devices Information
+This resource needs no other input.
+
+### Get Activity Log List
+: beforeDate (timestamp, str) : The date before which the data is required (YYYY-MM-DD if string).
+: afterDate (timestamp, str) : The date before which the data is required (YYYY-MM-DD if string).
+: sort (str) : The sort order (asc,desc).
+: limit (str,num) : Number of entries required (max 100).
+
+#### Note
+Either a before date or an after date is required. If both are provided, the before date will be used.
+
+### Get Daily Activity Summary
+: date (timestamp, str) : The date the summary is required for (YYYY-MM-DD if string).
+
+### Get Activity Timeseries
+: startDate (timestamp, str) : The date the data returned is to start from (YYYY-MM-DD if string).
+: endDate (timestamp, str) : The date the data returned should end on (YYYY-MM-DD if string).
+: period (num, str) : Use 1d, 7d, 30d, 1w, 1m, 3m, 6m or 1y
+
+#### Note
+An endDate is always required. If a period is provided, this will be used in combination with the endDate. If a startDate is provided, and no period, the data requested will be between those 2 dates.
+
+### Get Body Timeseries
+: resource (defined) : use one of bmi, fat, or weight.
+: startDate (timestamp, str) : The date the data returned is to start from (YYYY-MM-DD if string).
+: endDate (timestamp, str) : The date the data returned should end on (YYYY-MM-DD if string).
+: period (num, str) : Use 1d, 7d, 30d, 1w, 1m, 3m, 6m, 1y, or max
+
+#### Note
+An endDate is always required. If a period is provided, this will be used in combination with the endDate. If a startDate is provided, and no period, the data requested will be between those 2 dates.
+
+### Get Food Timeseries (not correct)
+: startDate (timestamp, str) : The date the data returned is to start from (YYYY-MM-DD if string).
+: endDate (timestamp, str) : The date the data returned should end on (YYYY-MM-DD if string).
+: period (num, str) : Use 1d, 7d, 30d, 1w, 1m, 3m, 6m or 1y
+
+#### Note
+An endDate is always required. If a period is provided, this will be used in combination with the endDate. If a startDate is provided, and no period, the data requested will be between those 2 dates.
+
+### Get Food Log
+: date (timestamp, str) : The date the summary is required for (YYYY-MM-DD if string).
+
+### Get Sleep Log by date
+: date (timestamp, str) : The date the summary is required for (YYYY-MM-DD if string).
+
+### Get Sleep Log List
+: beforeDate (timestamp, str) : The date before which the data is required (YYYY-MM-DD if string).
+: afterDate (timestamp, str) : The date before which the data is required (YYYY-MM-DD if string).
+: sort (str) : The sort order (asc,desc).
+: limit (str,num) : Number of entries required (max 100).
+
+#### Note
+Either a before date or an after date is required. If both are provided, the before date will be used.
+
+### Log Body Weight
+: date (timestamp, str) : The timestamp for the weight (YYYY-MM-DD if string). If no time is supplied it will be the last minute of the date.
+: weight (str,num) : The decimal weight in kg to be recorded.
+
+### Log Body Fat
+: date (timestamp, str) : The timestamp for the weight (YYYY-MM-DD if string). If no time is supplied it will be the last minute of the date.
+: fat (str,num) : The decimal percentage fat to be recorded.
+
+### Log activity
+
+### Log food
+
+### Delete activity
+
+### Delete log food
+
+### References
+
+    - [Twitter API docs]() - full description of `msg.tweet` property
+    - [GitHub]() - the nodes github repository
 </script>

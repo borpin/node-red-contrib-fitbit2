@@ -1,52 +1,27 @@
 {
-  "_from": "github:borpin/node-red-contrib-fitbit",
-  "_id": "node-red-contrib-fitbit@1.0.9",
-  "_inBundle": false,
-  "_integrity": "",
-  "_location": "/node-red-contrib-fitbit",
-  "_phantomChildren": {},
-  "_requested": {
-    "type": "git",
-    "raw": "borpin/node-red-contrib-fitbit",
-    "rawSpec": "borpin/node-red-contrib-fitbit",
-    "saveSpec": "github:borpin/node-red-contrib-fitbit",
-    "fetchSpec": null,
-    "gitCommittish": null
-  },
-  "_requiredBy": [
-    "#USER",
-    "/"
-  ],
-  "_resolved": "github:borpin/node-red-contrib-fitbit#2b956f8eb82c0a470f4d4eb6384f7481f730d300",
-  "_spec": "borpin/node-red-contrib-fitbit",
-  "_where": "/root/.node-red",
-  "author": "",
-  "bugs": {
-    "url": "https://github.com/JustinThorReid/node-red-contrib-fitbit/issues"
-  },
-  "bundleDependencies": false,
-  "dependencies": {
-    "client-oauth2": "^4.2.5",
-    "moment": "^2.24.0",
-    "request": "^2.88.0",
-    "got": "^12.0.0"
-  },
-  "deprecated": false,
+  "name": "node-red-contrib-fitbit2",
+  "version": "0.1.0",
   "description": "Adds Fitbit API nodes to Node-RED",
-  "devDependencies": {
-    "chai": "^4.3.4",
-    "mocha": "^8.3.2"
-  },
-  "homepage": "https://github.com/JustinThorReid/node-red-contrib-fitbit#readme",
+  "homepage": "https://github.com/borpin/node-red-contrib-fitbit2#readme",
+  "license": "ISC",
   "keywords": [
     "node-red",
     "fitbit",
     "health",
     "tracker"
   ],
-  "license": "ISC",
   "main": "index.js",
-  "name": "node-red-contrib-fitbit",
+  "deprecated": false,
+  "author": "borpin",
+  "bugs": {
+    "url": "https://github.com/borpin/node-red-contrib-fitbit2/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "client-oauth2": "^4.0.0",
+    "moment": "^2.0.0",
+    "request": "^2.0.0"
+  },
   "node-red": {
     "nodes": {
       "fitbit-credentials": "fitbit-credentials.js",
@@ -55,10 +30,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/JustinThorReid/node-red-contrib-fitbit.git"
-  },
-  "scripts": {
-    "test": "mocha \"test/**/*_spec.js\""
-  },
-  "version": "1.0.9"
+    "url": "git+https://github.com/borpin/node-red-contrib-fitbit2.git"
+  }
 }
